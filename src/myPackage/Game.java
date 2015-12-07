@@ -1,5 +1,6 @@
 package myPackage;
 
+import javax.swing.*;
 import java.util.*;
 
 public class Game {
@@ -9,7 +10,7 @@ public class Game {
     public Game() {
 
         Throw();
-//        sortDice();
+        sortDice();
         showDice();
 
         selectDice();
