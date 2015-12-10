@@ -15,141 +15,163 @@ class MyWindowListener extends WindowAdapter {
     }
 }
 
-// button event handler class
-class MyActionListener implements ActionListener {
-    JFrame frame;
-
-    MyActionListener(JFrame f) {
-        frame = f;
-    }
-
-
-    public void actionPerformed(ActionEvent e) {
-
-        int action = Integer.parseInt(e.getActionCommand());
-        switch (action) {
-            case 1:
-                frame.getContentPane().setBackground(Color.red);
-                break;
-            case 2:
-                frame.getContentPane().setBackground(Color.yellow);
-                break;
-            default:
-                break;
-        }
-
-    }
-}
-
 public class Main {
 
-
-    final static boolean shouldFill = true;
-    final static boolean shouldWeightX = true;
-    final static boolean RIGHT_TO_LEFT = false;
+    private static JFrame frame;
 
     public static void addComponentsToPane(Container pane) {
-        if (RIGHT_TO_LEFT) {
-            pane.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
-        }
+
+        int column = 0, row = 0;
 
         JButton button;
         pane.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
-        if (shouldFill) {
-            //natural height, maximum width
+
+        int totalButtons = 12;
+
+        // creating 5 buttons as dices
+        for (int i = 0; i < totalButtons; i++) {
+
+            row++;
+            button = new JButton();
+
+            //disable the focus border
+            button.setFocusable(false);
+            //disable the background in order to have just the icon
+            button.setBorderPainted(false);
+
             c.fill = GridBagConstraints.HORIZONTAL;
-        }
 
-//        //creating buttons
-//        JButton button = new JButton("press for red");
-//        JButton button2 = new JButton("press for yellow");
-//
-//        //creating label for first player
-//        JLabel firstPlayer = new JLabel("Dices for the first player:");
-//
-//        //creating dices
-//        JButton dice1 = new JButton();
-//        JButton dice2 = new JButton();
-//        JButton dice3 = new JButton();
-//        JButton dice4 = new JButton();
-//        JButton dice5 = new JButton();
-//
-//        //setting the images
-//        dice1.setIcon(new javax.swing.ImageIcon("images//dice_0.png"));
-//        dice2.setIcon(new javax.swing.ImageIcon("images//dice_0.png"));
-//        dice3.setIcon(new javax.swing.ImageIcon("images//dice_0.png"));
-//        dice4.setIcon(new javax.swing.ImageIcon("images//dice_0.png"));
-//        dice5.setIcon(new javax.swing.ImageIcon("images//dice_0.png"));
-//
-//        // set the content pane to be the newly created JPanel
-//        frame.setContentPane(jp);
-//        frame.getContentPane().add(button);
-//        frame.getContentPane().add(button2);
-//        frame.getContentPane().add(firstPlayer);
-//        frame.getContentPane().add(dice1);
-//        frame.getContentPane().add(dice2);
-//        frame.getContentPane().add(dice3);
-//        frame.getContentPane().add(dice4);
-//        frame.getContentPane().add(dice5);
-//
-//        // register an event handler for button events
-//        button.addActionListener(new MyActionListener(frame));
-//        button2.addActionListener(new MyActionListener(frame));
-//
-//        button.setActionCommand("1");
-//        button2.setActionCommand("2");
+            if (i % (totalButtons / 2) != 0) {
+                button.setIcon(new javax.swing.ImageIcon("images//dice_0.png"));
+            } else {
+                if (i == (totalButtons / 2)) column++;
+                row = 0;
+                button.setText("Player " + (column + 1));
+                // I want to have border on the name buttons
+                button.setBorderPainted(true);
+            }
 
-
-
-
-        button = new JButton();
-        button.setIcon(new javax.swing.ImageIcon("images//dice_0.png"));
-        if (shouldWeightX) {
             c.weightx = 0.5;
+            c.gridx = row;
+            c.gridy = column;
+            pane.add(button, c);
+
+            button.addActionListener(new java.awt.event.ActionListener() {
+                int ii = 0;
+
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    JButton test = (JButton) evt.getSource();
+                    ii++;
+
+                    if (test.getIcon() == null) {//when it is a label
+                        String myName = JOptionPane.showInputDialog("Please enter your name:");
+                        test.setText(myName);
+                        //todo need to resize the window now, because if you add a bigger name, it will look weird
+                        //todo need to let the user to change his name. after that do the other one as Computer Player
+                        //todo after deciding which one is computer, make the other buttons unclickable. maybe using something like:   test.setEnabled(false);
+                    } else {//when it is a dice
+                        test.setIcon(new javax.swing.ImageIcon("images//dice_" + ii + ".png"));
+                    }
+
+                    if (ii == 6) ii = 0; //because the dice has 6 faces -- 7 would be out of boundaries
+                }
+            });
+
         }
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridx = 0;
-        c.gridy = 0;
-        pane.add(button, c);
 
-        button = new JButton();
-        button.setIcon(new javax.swing.ImageIcon("images//dice_0.png"));
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 0.5;
-        c.gridx = 1;
-        c.gridy = 0;
-        pane.add(button, c);
 
-        button = new JButton();
-        button.setIcon(new javax.swing.ImageIcon("images//dice_0.png"));
-        c.fill = GridBagConstraints.HORIZONTAL;
-        c.weightx = 0.5;
-        c.gridx = 2;
-        c.gridy = 0;
-        pane.add(button, c);
 
-        button = new JButton();
-        button.setIcon(new javax.swing.ImageIcon("images//dice_0.png"));
+        //creating the rest of the menu
+
+        //creating a label above the buttons
+        row = 0;
+        column++;
+
+        JLabel border = new JLabel(" Use these buttons to play the game. ");
+        border.setHorizontalAlignment(SwingConstants.CENTER);
+
+        border.setForeground(Color.blue);
+        border.setBackground(Color.red);
+        border.setOpaque(true);
+
         c.fill = GridBagConstraints.HORIZONTAL;
         c.ipady = 40;      //make this component tall
-        c.weightx = 0.0;
-        c.gridwidth = 3;
-        c.gridx = 0;
-        c.gridy = 1;
-        pane.add(button, c);
+        c.gridwidth = totalButtons/2;
+        c.gridx = row;
+        c.gridy = column;
+        pane.add(border, c);
 
-        button = new JButton();
-        button.setIcon(new javax.swing.ImageIcon("images//dice_0.png"));
+        //creating menu buttons
+        row = 0;
+        column++;
+
+        for(int i=0;i<2;i++) {
+            button = new JButton();
+
+            if(i==0) button.setText("Throw");
+            else  button.setText("Score");
+
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.gridwidth = totalButtons / 4;
+            c.gridx = row;
+            c.gridy = column;
+            pane.add(button, c);
+            row=row+totalButtons / 4;
+        }
+
+        //creating a label on the right hand side to display statistics
+        row = totalButtons/2;
+        column = 0;
+        row++;
+//todo might want to add rounded corners to labels
+        border = new JLabel(" Use these statistics to develop your winning strategy. ");
+        border.setHorizontalAlignment(SwingConstants.CENTER);
+
+        border.setForeground(Color.blue);
+        border.setBackground(Color.green);
+        border.setOpaque(true);
+
         c.fill = GridBagConstraints.HORIZONTAL;
-        c.ipady = 0;       //reset to default
-        c.weighty = 1.0;   //request any extra vertical space
-        c.anchor = GridBagConstraints.PAGE_END; //bottom of space
-        c.insets = new Insets(10,0,0,0);  //top padding
-        c.gridx = 1;       //aligned with button 2
-        c.gridwidth = 2;   //2 columns wide
-        c.gridy = 2;       //third row
-        pane.add(button, c);
+        c.ipady = 40;      //make this component tall
+        c.gridwidth = totalButtons/2;
+        c.gridx = row;
+        c.gridy = column;
+        pane.add(border, c);
+
+
+
+
+//todo need to find the biggest width and set it to every cell
+
+
+
+
+
+
+
+//        // the rest of them
+//        button = new JButton();
+//        button.setIcon(new javax.swing.ImageIcon("images//dice_1.png"));
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.ipady = 40;      //make this component tall
+//        c.weightx = 0.0;
+//        c.gridwidth = 3;
+//        c.gridx = 0;
+//        c.gridy = 1;
+//        pane.add(button, c);
+//
+//        button = new JButton();
+//        button.setIcon(new javax.swing.ImageIcon("images//dice_0.png"));
+//        c.fill = GridBagConstraints.HORIZONTAL;
+//        c.ipady = 0;       //reset to default
+//        c.weighty = 1.0;   //request any extra vertical space
+//        c.anchor = GridBagConstraints.PAGE_END; //bottom of space
+//        c.insets = new Insets(10, 0, 0, 0);  //top padding
+//        c.gridx = 1;       //aligned with button 2
+//        c.gridwidth = 2;   //2 columns wide
+//        c.gridy = 2;       //third row
+//        pane.add(button, c);
     }
 
     /**
@@ -159,7 +181,7 @@ public class Main {
      */
     private static void createAndShowGUI() {
         //Create and set up the window.
-        JFrame frame = new JFrame("GridBagLayoutDemo");
+        frame = new JFrame(" The dice game ");
 
         // register an event handler for frame events
         frame.addWindowListener(new MyWindowListener());
@@ -171,7 +193,6 @@ public class Main {
         frame.pack();
         frame.setVisible(true);
     }
-
 
 
     public static void main(String[] args) {
