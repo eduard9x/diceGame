@@ -16,18 +16,51 @@ class MyWindowListener extends WindowAdapter {
 }
 
 public class Main {
+    //todo might want to add rounded corners to labels
+    //todo try to make the font bigger
+    //todo try to use different fonts. console game type.
+    //todo start connecting the GUI with the back end stuff
+    //todo implement swing threads
+    //todo need to add the new game button
+    //todo when changing the player name, say Hello on the blue label. after that show tips
 
-    private static JFrame frame;
+
+
+    public static JFrame frame;
 
     public static void addComponentsToPane(Container pane) {
-
-        int column = 0, row = 0;
+//todo need to change row and column between them
+        int column, row;
+        final String NEWGAME = "New Game";
 
         JButton button;
+        JLabel border;
         pane.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
         int totalButtons = 12;
+
+
+        //creating a label at the top
+        row = 0;
+        column = 0;
+
+        border = new JLabel("#1 To keep a dice, just click on it. ");
+        border.setHorizontalAlignment(SwingConstants.CENTER);
+
+        border.setForeground(Color.black);
+        border.setBackground(Color.blue);
+        border.setOpaque(true);
+
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.ipady = 40;      //make this component tall
+        c.gridwidth = totalButtons / 2;
+        c.gridx = row;
+        c.gridy = column;
+        pane.add(border, c);
+
+        row = -1;//because I start the for loop with row++ todo need to change it to 0 for consistency
+        column++;
 
         // creating 5 buttons as dices
         for (int i = 0; i < totalButtons; i++) {
@@ -47,12 +80,14 @@ public class Main {
             } else {
                 if (i == (totalButtons / 2)) column++;
                 row = 0;
-                button.setText("Player " + (column + 1));
+                button.setText("Player " + column);
                 // I want to have border on the name buttons
                 button.setBorderPainted(true);
             }
 
             c.weightx = 0.5;
+            c.gridwidth = 1;
+            c.ipady = 10;
             c.gridx = row;
             c.gridy = column;
             pane.add(button, c);
@@ -62,8 +97,9 @@ public class Main {
 
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     JButton test = (JButton) evt.getSource();
-                    ii++;
 
+                    //testing the click button thing
+                    ii++;
                     if (test.getIcon() == null) {//when it is a label
                         String myName = JOptionPane.showInputDialog("Please enter your name:");
                         test.setText(myName);
@@ -81,14 +117,13 @@ public class Main {
         }
 
 
-
         //creating the rest of the menu
 
         //creating a label above the buttons
         row = 0;
         column++;
 
-        JLabel border = new JLabel(" Use these buttons to play the game. ");
+        border = new JLabel(" Use these buttons to play the game. ");
         border.setHorizontalAlignment(SwingConstants.CENTER);
 
         border.setForeground(Color.blue);
@@ -97,7 +132,7 @@ public class Main {
 
         c.fill = GridBagConstraints.HORIZONTAL;
         c.ipady = 40;      //make this component tall
-        c.gridwidth = totalButtons/2;
+        c.gridwidth = totalButtons / 2;
         c.gridx = row;
         c.gridy = column;
         pane.add(border, c);
@@ -106,25 +141,40 @@ public class Main {
         row = 0;
         column++;
 
-        for(int i=0;i<2;i++) {
+        for (int i = 0; i < 3; i++) {
             button = new JButton();
 
-            if(i==0) button.setText("Throw");
-            else  button.setText("Score");
+            if (i == 0) button.setText(NEWGAME);
+            else if (i == 1) button.setText("Throw");
+            else button.setText("Score");
 
             c.fill = GridBagConstraints.HORIZONTAL;
-            c.gridwidth = totalButtons / 4;
+            c.gridwidth = totalButtons / 6;
             c.gridx = row;
             c.gridy = column;
             pane.add(button, c);
-            row=row+totalButtons / 4;
+            row = row + totalButtons / 6;
+            //todo need to turn that 6 into total/numberofbuttons * 2
+
+
+            button.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    Game createNewGame;
+                    JButton test = (JButton) evt.getSource();
+                    if (test.getText() == NEWGAME) {
+                        createNewGame = new Game();
+                    }
+                }
+            });
+
+
         }
 
         //creating a label on the right hand side to display statistics
-        row = totalButtons/2;
+        row = totalButtons / 2;
         column = 0;
         row++;
-//todo might want to add rounded corners to labels
+
         border = new JLabel(" Use these statistics to develop your winning strategy. ");
         border.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -134,44 +184,52 @@ public class Main {
 
         c.fill = GridBagConstraints.HORIZONTAL;
         c.ipady = 40;      //make this component tall
-        c.gridwidth = totalButtons/2;
+        c.gridwidth = totalButtons / 2;
         c.gridx = row;
         c.gridy = column;
         pane.add(border, c);
 
+        for (int i = 0; i < 4; i++) {
 
+            //creating a new label on the right hand side to display statistics
+            row = totalButtons / 2;
+            column++;
+            row++;
+
+            border = new JLabel(" Player 1 : points ");
+            border.setHorizontalAlignment(SwingConstants.CENTER);
+
+
+            border.setForeground(Color.blue);
+            border.setBackground(Color.lightGray);
+            border.setOpaque(true);
+
+            //todo add if statements here
+
+            if (i == 2) {
+                border.setBackground(Color.magenta);
+                border.setText("Score: 42 - 93");
+            } else if (i == 3) {
+                border.setBackground(Color.pink);
+                border.setText("Overall Score: 2 - 1");
+            }
+
+
+            //todo end if statements here
+
+            c.fill = GridBagConstraints.HORIZONTAL;
+            c.ipady = 40;      //make this component tall
+            c.gridwidth = totalButtons / 2;
+            c.gridx = row;
+            c.gridy = column;
+            pane.add(border, c);
+
+        }
 
 
 //todo need to find the biggest width and set it to every cell
+//todo how to add padding        c.insets = new Insets(10, 0, 0, 0);  //top padding
 
-
-
-
-
-
-
-//        // the rest of them
-//        button = new JButton();
-//        button.setIcon(new javax.swing.ImageIcon("images//dice_1.png"));
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        c.ipady = 40;      //make this component tall
-//        c.weightx = 0.0;
-//        c.gridwidth = 3;
-//        c.gridx = 0;
-//        c.gridy = 1;
-//        pane.add(button, c);
-//
-//        button = new JButton();
-//        button.setIcon(new javax.swing.ImageIcon("images//dice_0.png"));
-//        c.fill = GridBagConstraints.HORIZONTAL;
-//        c.ipady = 0;       //reset to default
-//        c.weighty = 1.0;   //request any extra vertical space
-//        c.anchor = GridBagConstraints.PAGE_END; //bottom of space
-//        c.insets = new Insets(10, 0, 0, 0);  //top padding
-//        c.gridx = 1;       //aligned with button 2
-//        c.gridwidth = 2;   //2 columns wide
-//        c.gridy = 2;       //third row
-//        pane.add(button, c);
     }
 
     /**
@@ -208,3 +266,6 @@ public class Main {
     }
 
 }
+
+//todo make everything reset when you change player's name
+//todo when click new game, don't reset overall. maybe you want to keep it. but read specs first.
