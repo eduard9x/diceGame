@@ -11,6 +11,7 @@ public class Die implements DieIntf, Comparable<Die>{
     public int getDieImage(){
         return image;
     }
+
     public void setImage(int i){
         image = i;
     }
@@ -25,5 +26,4 @@ public class Die implements DieIntf, Comparable<Die>{
         if(T.value == this.value) return 0;
         else return T.value > this.value ? 1 : -1;
     }
-
 }

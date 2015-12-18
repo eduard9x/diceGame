@@ -8,6 +8,3 @@ public interface DieIntf {
     int getValue();
 
 }
-
-
-
